@@ -1,0 +1,11 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "concat_space": false,
+        "binary_operator_spaces": {
+            "operators": {
+                "=": "align_by_scope"
+            }
+        }
+    }
+}

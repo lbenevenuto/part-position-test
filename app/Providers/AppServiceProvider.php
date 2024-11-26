@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Gate;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +26,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::before(function (User $user, string $ability) {
+            return $user->isAdministrator() ? true : null;
+        });
+
+        Gate::after(function (User $user, string $ability, ?bool $result, mixed $arguments) {
+            return $user->isAdministrator() ? true : null;
+        });
+
+        AnonymousResourceCollection::macro('paginationInformation', function ($request, $paginated, $default) {
+            unset($default['meta']['links']);
+
+            return $default;
+        });
     }
 }

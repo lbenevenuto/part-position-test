@@ -13,7 +13,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.2",
         "fakerphp/faker": "^1.24",
-        "laravel/pail": "^1.1",
+        "laravel/pail": "^1.2",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.38",
         "laravel/telescope": "^5.2",

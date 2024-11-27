@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\Episode;
 use App\Models\Part;
@@ -145,7 +145,7 @@ class PartTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonFragment($data);
         $this->episode->refresh();
-        // Part 10 should now be in position 5 and Part 9 should be in position 9
+        // Part 10 should now be in position 5 and Part 9 should be in position 10
         $this->assertEquals(5, $this->episode->parts->find($lastPart->id)->position);
         $this->assertEquals(9, $this->episode->parts->find($secondPart->id)->position);
     }

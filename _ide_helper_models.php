@@ -73,21 +73,16 @@ namespace App\Models{
  * @property string $title
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Part> $parts
  * @property-read int|null $parts_count
  * @method static \Database\Factories\EpisodeFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode withTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Episode withoutTrashed()
  */
 	class Episode extends \Eloquent {}
 }

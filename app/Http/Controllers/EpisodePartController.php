@@ -28,7 +28,7 @@ class EpisodePartController extends Controller
         return new PartResource($episode->parts()->create($request->all()));
     }
 
-    public function show(Part $part): PartResource
+    public function show(Episode $episode, Part $part): PartResource
     {
         logger(__METHOD__ . ' triggered');
 
@@ -54,7 +54,7 @@ class EpisodePartController extends Controller
     /**
      * @throws Throwable
      */
-    public function destroy(Part $part): Response
+    public function destroy(Episode $episode, Part $part): Response
     {
         logger(__METHOD__ . ' triggered');
 

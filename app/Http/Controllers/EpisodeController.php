@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EpisodeRequest;
 use App\Http\Resources\EpisodeResource;
 use App\Models\Episode;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 
@@ -24,12 +25,15 @@ class EpisodeController extends Controller
         return new EpisodeResource(Episode::create($request->all()));
     }
 
-    public function show(Episode $episode): EpisodeResource
+    public function show(Request $request, Episode $episode): EpisodeResource
     {
         logger(__METHOD__ . ' triggered');
 
-        return new EpisodeResource($episode);
+        if ($request->has('withParts') && $request->withParts == 1) {
+            $episode->load('parts');
+        }
 
+        return new EpisodeResource($episode);
     }
 
     public function update(EpisodeRequest $request, Episode $episode): EpisodeResource

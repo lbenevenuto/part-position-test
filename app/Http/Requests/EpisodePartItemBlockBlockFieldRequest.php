@@ -22,8 +22,8 @@ class EpisodePartItemBlockBlockFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', 'string'],
-            'value' => ['required', 'string'],
+            'type' => ['string'],
+            'value' => ['string'],
         ];
     }
 }

@@ -40,6 +40,7 @@ Benefits:
 
 
 ### You can use the `Insomnia_requests.json` file to load all REST API requests inside Insomnia and see all the endpoints working with the payload.
+![image](https://github.com/user-attachments/assets/7e5c075e-3d62-4d62-b2d5-511f254a0192)
 
 # Requirements
 1. Git
@@ -111,3 +112,4 @@ curl --request POST \
 ```shell
 ./vendor/bin/sail artisan test
 ```
+

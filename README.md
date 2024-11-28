@@ -1,66 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Assumptions
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The easiest way to recalculate the position of the parts and still have consistency in the database is using PostgreSQL with DEFERRABLE unique CONSTRAINTS.  
+For MySQL: **InnoDB checks foreign key constraints immediately; the check is not deferred to transaction commit.** So we CAN'T use MySQL.
 
-## About Laravel
+### Considerations for Scalability
+Ensure all updates are transactional to prevent data corruption during concurrent operations.
+Add a composite unique index on (episode_id, position) to enforce data integrity.
+This approach is efficient, straightforward, and ensures consistent position recalculations.
+```sql
+ALTER TABLE parts DROP CONSTRAINT IF EXISTS parts_episode_id_position_unique, ADD CONSTRAINT parts_episode_id_position_unique UNIQUE (episode_id, position) DEFERRABLE INITIALLY DEFERRED;
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Using Observers
+#### Explanation of the Observer Methods
+1. Creating Method:
+   - Adjusts positions when a new Part is inserted.
+   - Shifts all Parts with position >= newPart.position to make space for the new Part.
+2. Updating Method:
+   - Handles position changes for existing Parts.
+   - Moves affected Parts up or down depending on whether the new position is greater or less than the original position.
+3. Deleting Method:
+   - Adjusts positions when a Part is deleted.
+   - Decrements the position of all subsequent Parts to close the gap.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Advantages of This Approach
+1. Centralized Logic: All position recalculations are encapsulated in the PartObserver, making the model more cohesive and maintaining the DRY principle.
+2. Database Integrity: The unique index on episode_id and position ensures no duplicate positions.
+3. Atomic Operations: Transactions ensure that changes are applied consistently across all affected rows.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Alternative Approach: Gapped Indexing
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Instead of recalculating positions every time, use a gapped sequence (e.g., 10, 20, 30). When adding a new part, insert it into the gap (e.g., 15 between 10 and 20). Recalculation happens only when gaps are exhausted.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Benefits:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Minimizes updates to the database.
+- Scales well for large datasets with frequent edits.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### You can use the `Insomnia_requests.json` file to load all REST API requests inside Insomnia and see all the endpoints working with the payload.
 
-### Premium Partners
+# Requirements
+1. Git
+2. Docker
+3. Docker Compose
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+## How to run the project
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```shell
+# Clone the repository
+git clone
+cp .env.example .env
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php83-composer:latest \
+    composer install --ignore-platform-reqs
+# Change the env variables in the .env file
+# DB_CONNECTION=pgsql
+# DB_HOST=pgsql
+# DB_PORT=5432
+# DB_DATABASE=laravel
+# DB_USERNAME=sail
+# DB_PASSWORD=password
+# SESSION_DRIVER=redis
+# QUEUE_CONNECTION=redis
+# MAIL_MAILER=smtp
+# MAIL_HOST=mailpit
+# MAIL_PORT=1025
+# And TELESCOPE_ENABLED=true if you want to use Telescope
+./vendor/bin/sail build --no-cache
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate:fresh --seed
+```
 
-## Code of Conduct
+### After running the above commands, you can access the project at http://localhost
+#### To retrieve the episodes
+```shell
+curl --request GET \
+  --url http://localhost/api/episodes \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json'
+```
+### To retrieve the parts
+```shell
+curl --request GET \
+  --url http://localhost/api/parts \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json'
+```
+### To retrieve parts from episode 1
+```shell
+curl --request GET \
+  --url http://localhost/api/episodes/1/parts \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json'
+```
+### To duplicate an episode. Change **{EPISODE_ID}** with the episode id you want to duplicate
+```shell
+curl --request POST \
+  --url http://localhost/api/episodes/{EPISODE_ID}/duplicate \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json'
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## how to run the tests
+```shell
+./vendor/bin/sail artisan test
+```

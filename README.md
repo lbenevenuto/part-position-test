@@ -107,6 +107,21 @@ curl --request POST \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json'
 ```
+### Sort parts from episode 1
+```shell
+curl --request POST \
+  --url http://localhost/api/episodes/1/parts/sort \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"positions": [
+		4,
+		2,
+		3,
+		1
+	]
+}'
+```
 
 ## how to run the tests
 ```shell

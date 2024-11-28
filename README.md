@@ -54,7 +54,8 @@ Benefits:
 
 ```shell
 # Clone the repository
-git clone
+git clone https://github.com/lbenevenuto/part-position-test.git
+cd part-position-test
 cp .env.example .env
 docker run --rm \
     -u "$(id -u):$(id -g)" \

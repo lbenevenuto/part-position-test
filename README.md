@@ -47,6 +47,8 @@ Benefits:
 2. Docker
 3. Docker Compose
 
+### I added a initial CI/CD pipeline using GitHub Actions. You can see the pipeline running in the Actions tab.
+- Pipeline file: `.github/workflows/laravel.yml`
 
 ## How to run the project
 

@@ -111,3 +111,108 @@ curl --request POST \
 ```shell
 ./vendor/bin/sail artisan test
 ```
+### Result
+```
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true
+
+   PASS  Tests\Feature\EpisodePartItemBlockBlockFieldTest
+  ✓ can list block fields                                                     0.17s  
+  ✓ can create a block field                                                  0.02s  
+  ✓ can view single block field                                               0.02s  
+  ✓ can update a block field                                                  0.02s  
+  ✓ can delete a block field                                                  0.02s  
+
+   PASS  Tests\Feature\EpisodePartTest
+  ✓ can list episode parts                                                    0.06s  
+  ✓ can create an episode part                                                0.05s  
+  ✓ can view single episode part                                              0.05s  
+  ✓ can update an episode part                                                0.05s  
+  ✓ can delete an episode part                                                0.06s  
+  ✓ can sort an episode parts                                                 0.06s  
+
+   PASS  Tests\Feature\EpisodeTest
+  ✓ can list episodes                                                         0.06s  
+  ✓ can view single episode with parts                                        0.05s  
+  ✓ can create an episode                                                     0.05s  
+  ✓ can update an episode                                                     0.05s  
+  ✓ can delete an episode                                                     0.05s  
+  ✓ can duplicate an episode                                                  0.11s  
+
+   PASS  Tests\Feature\PartTest
+  ✓ can list parts                                                            0.02s  
+  ✓ can view single part                                                      0.02s  
+  ✓ can create a part at the beginning                                        0.02s  
+  ✓ can create a part in the middle                                           0.02s  
+  ✓ can update a part position going up                                       0.02s  
+  ✓ can update a part position going down                                     0.02s  
+  ✓ can delete a part                                                         0.02s  
+
+  Tests:    25 passed (266 assertions)
+  Duration: 1.15s
+```
+### Result with coverage
+```
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true
+
+   PASS  Tests\Feature\EpisodePartItemBlockBlockFieldTest
+  ✓ can list block fields                                                     0.22s  
+  ✓ can create a block field                                                  0.03s  
+  ✓ can view single block field                                               0.03s  
+  ✓ can update a block field                                                  0.02s  
+  ✓ can delete a block field                                                  0.02s  
+
+   PASS  Tests\Feature\EpisodePartTest
+  ✓ can list episode parts                                                    0.07s  
+  ✓ can create an episode part                                                0.07s  
+  ✓ can view single episode part                                              0.07s  
+  ✓ can update an episode part                                                0.07s  
+  ✓ can delete an episode part                                                0.07s  
+  ✓ can sort an episode parts                                                 0.07s  
+
+   PASS  Tests\Feature\EpisodeTest
+  ✓ can list episodes                                                         0.07s  
+  ✓ can view single episode with parts                                        0.07s  
+  ✓ can create an episode                                                     0.07s  
+  ✓ can update an episode                                                     0.07s  
+  ✓ can delete an episode                                                     0.07s  
+  ✓ can duplicate an episode                                                  0.13s  
+
+   PASS  Tests\Feature\PartTest
+  ✓ can list parts                                                            0.03s  
+  ✓ can view single part                                                      0.02s  
+  ✓ can create a part at the beginning                                        0.03s  
+  ✓ can create a part in the middle                                           0.02s  
+  ✓ can update a part position going up                                       0.03s  
+  ✓ can update a part position going down                                     0.03s  
+  ✓ can delete a part                                                         0.02s  
+
+  Tests:    25 passed (266 assertions)
+  Duration: 1.45s
+
+  Http/Controllers/Controller .............................................. 100.0%  
+  Http/Controllers/EpisodeController ....................................... 100.0%  
+  Http/Controllers/EpisodePartController ................................... 100.0%  
+  Http/Controllers/EpisodePartItemBlockBlockFieldController ................ 100.0%  
+  Http/Controllers/PartController .......................................... 100.0%  
+  Http/Requests/EpisodePartItemBlockBlockFieldRequest ...................... 100.0%  
+  Http/Requests/EpisodeRequest ............................................. 100.0%  
+  Http/Requests/PartRequest ................................................ 100.0%  
+  Http/Requests/PartSortRequest ............................................ 100.0%  
+  Http/Resources/BlockFieldResource ........................................ 100.0%  
+  Http/Resources/EpisodeResource ........................................... 100.0%  
+  Http/Resources/PartResource .............................................. 100.0%  
+  Models/Block ......................................................... 22 / 75.0%  
+  Models/BlockField .......................................................... 0.0%  
+  Models/Episode ........................................................... 100.0%  
+  Models/Item .......................................................... 22 / 50.0%  
+  Models/Media ............................................................... 0.0%  
+  Models/Part .......................................................... 28 / 92.9%  
+  Models/User ................................................................ 0.0%  
+  Observers/PartObserver ................................................... 100.0%  
+  Providers/AppServiceProvider ............................. 18..20, 30..34 / 64.3%  
+  Providers/TelescopeServiceProvider ......................................... 0.0%  
+  ─────────────────────────────────────────────────────────────────────────────────  
+                                                                      Total: 82.4 % 
+```
